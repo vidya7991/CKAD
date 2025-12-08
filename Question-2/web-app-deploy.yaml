@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: web-app-deploy
+  name: web-app-deploy
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web-app-deploy
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: web-app-deploy
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        env: 
+        - name: UI_COLOR
+          valueFrom:
+             configMapKeyRef:
+               name: app-settings
+               key: UI_COLOR
+        - name: API_URL
+          valueFrom:
+              configMapKeyRef:
+               name: app-settings
+               key: API_URL
+status: {}

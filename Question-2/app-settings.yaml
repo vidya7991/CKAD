@@ -1,0 +1,7 @@
+apiVersion: v1
+data:
+  API_URL: http://api.backend.svc.cluster.local
+  UI_COLOR: blue
+kind: ConfigMap
+metadata:
+  name: app-settings
