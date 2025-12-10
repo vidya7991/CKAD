@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: pod
+  name: db-pod
+spec:
+  containers:
+    - name: db-pod
+      image: mongo:4.0
+      volumeMounts:
+      - mountPath: "/data/db"
+        name: db-data-pvc
+  volumes:
+    - name: db-data-pvc
+      persistentVolumeClaim:
+        claimName: db-data-pvc

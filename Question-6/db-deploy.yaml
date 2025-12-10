@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: database
+  name: db-deploy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: db-deploy
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: db-deploy
+    spec:
+      containers:
+      - image: busybox
+        name: busybox
+        resources: {}
+        command: ["/bin/sh", "-c", "sleep 3600"]
+status: {}
