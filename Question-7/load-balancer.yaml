@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: load-balancer
+  name: load-balancer
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: load-balancer
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: load-balancer
+    spec:
+      containers:
+      - image: k8s.gcr.io/hpa-example
+        name: hpa-example
+        resources: {}
+        ports:
+        - containerPort: 80
+        
+status: {}

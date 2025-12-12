@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: data-api
+  namespace: data-processor-ns
+spec:
+  selector:
+    matchLabels:
+      app: data-api
+  serviceName: data-api-headless
+  replicas: 2
+
+  template:
+    metadata:
+      labels:
+        app: data-api
+    
+    spec:
+      volumes:
+      - name: secret-volume
+        secret:
+          secretName: db-credentials
+      containers:
+      - name: data-api-main
+        image: nginx:latest
+        volumeMounts:
+        - name: secret-volume
+          mountPath: /mnt/db-credentials
+        ports:
+        - containerPort: 8080
+        env:
+        - name: API_LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: LOG_LEVEL
+      
+      - name: health-monitor
+        image: busybox
+        command: ["/bin/sh", "-c"]
+        args: 
+            - while true; do echo 'Data API is healthy' >> /dev/termination-log; sleep 10; done

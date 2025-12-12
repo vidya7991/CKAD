@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: daily-backup
+spec:
+  jobTemplate:
+    metadata:
+      name: daily-backup
+    spec:
+      template:
+        metadata: {}
+        spec:
+          containers:
+          - image: busybox
+            name: daily-backup
+            env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: username
+            command: ["/bin/sh", "-c", "echo 'Starting backup using $DB_USER...'; sleep 5;"]
+            volumeMounts:
+            - name: secret-volume
+              readOnly: true
+              mountPath: "/etc/secrets/db/"
+            resources: {}
+
+          volumes:
+          - name: secret-volume
+            secret:
+              secretName: db-credentials
+          restartPolicy: OnFailure
+  schedule: 0 23 * * *
+status: {}

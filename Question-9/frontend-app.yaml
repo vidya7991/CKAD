@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: frontend-app
+  name: frontend-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: frontend-app
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: frontend-app
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        env:
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: username
+              key: username
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              name: pass
+              key: password
+        resources: {}
+      initContainers:
+      - name: wait-for-api
+        image: busybox
+        command: ["sh", "-c"]
+        args:
+        - echo "Waiting for API startup..."
+          sleep 10
+status: {}

@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: ready-pod
+  name: ready-pod
+  namespace: ckad-q1-init
+spec:
+  volumes:
+    - name: config-volume
+      configMap:
+        name: startup-settings
+  containers:
+  - image: nginx
+    name: app
+    resources: {}
+  initContainers:
+  - image: busybox
+    name: initializer
+    command: ["sh", "-c", "sleep $(cat /etc/config/WAIT_TIME)"]
+    volumeMounts:
+    - name: config-volume
+      mountPath: /etc/config
+      readOnly: true
+  
+  - image: busybox
+    name: monitor
+    command: ["/bin/sh", "-c"]
+    args: ["while true; do echo 'Current Date:$(date); sleep 5; done"]
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
