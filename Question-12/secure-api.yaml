@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: secure-api
+  name: secure-api
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: secure-api
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: secure-api
+    spec:
+      containers:
+      - image: nginx:1.20
+        name: nginx
+        envFrom:
+          - secretRef:
+              name: app-credentials
+        resources: {}
+status: {}

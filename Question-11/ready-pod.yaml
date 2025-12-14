@@ -14,19 +14,20 @@ spec:
   - image: nginx
     name: app
     resources: {}
+  - image: busybox
+    name: monitor
+    command: ["/bin/sh", "-c"]
+    args: ["while true; do echo 'Current Date:$(date)'; sleep 5; done"]
   initContainers:
   - image: busybox
     name: initializer
-    command: ["sh", "-c", "sleep $(cat /etc/config/WAIT_TIME)"]
+    command: ["sh", "-c", "sleep 15"]
     volumeMounts:
     - name: config-volume
       mountPath: /etc/config
       readOnly: true
   
-  - image: busybox
-    name: monitor
-    command: ["/bin/sh", "-c"]
-    args: ["while true; do echo 'Current Date:$(date); sleep 5; done"]
+  
   dnsPolicy: ClusterFirst
   restartPolicy: Always
 status: {}
