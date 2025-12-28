@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: log-emitter
+  name: log-emitter
+  namespace: monitoring-q2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: log-emitter
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: log-emitter
+    spec:
+      containers:
+      - image: busybox
+        name: busybox
+        command: ["/bin/sh", "-c", "while true; do echo Log entry from Deployment: $(date); sleep 1; done"]
+        resources: {}
+      
+status: {}

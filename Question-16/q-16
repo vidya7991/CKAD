@@ -1,0 +1,18 @@
+Advanced Logging and Resource Quotas (12 Minutes)
+You need to capture container logs and ensure the namespace has resource constraints.
+
+Create a Namespace named monitoring-q2.
+
+In this namespace, create a ResourceQuota named dev-quota that limits:
+
+Total number of Pods to 10.
+
+Total memory requests to 2Gi.
+
+Create a Deployment named log-emitter with 1 replica using the image busybox.
+
+The container should execute the command: ["/bin/sh", "-c", "while true; do echo Log entry from Deployment: $(date); sleep 1; done"].
+
+Troubleshoot: Use a single kubectl command to continuously follow the logs for the log-emitter Deployment.
+
+Verification: Describe the namespace and confirm the ResourceQuota is active.

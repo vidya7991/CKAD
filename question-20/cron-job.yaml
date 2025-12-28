@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: db-backup
+spec:
+  jobTemplate:
+    metadata:
+      name: db-backup
+    spec:
+      template:
+        metadata: {}
+        spec:
+          containers:
+          - image: busybox
+            name: db-backup
+            command:
+            - /bin/sh
+            - -c
+            - "mkdir -p /backup; date; echo Backup done >> /backup/backup.log"
+            resources: {}
+            volumeMounts:
+            - name: backup-volume
+              mountPath: /backup
+          restartPolicy: OnFailure
+          volumes :
+          - name: backup-volume
+            emptyDir: {}
+
+  schedule: '*/5 * * * *'
+status: {}

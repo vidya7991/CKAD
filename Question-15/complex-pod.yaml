@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: po
+  name: po
+  namespace: ckad-q5-advanced
+spec:
+  containers:
+    - image: nginx
+      name: main-app
+      resources:
+        limits: 
+          cpu: "200m"
+          memory: "256Mi"
+    - image: busybox
+      name: log-collector
+      command: ["/bin/sh", "-c", "tail -f /dev/null"]
+  initContainers:
+    - image: busybox
+      name: pre-check
+      command: ["sh", "-c", "echo 'Pre-check complete'"]
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}

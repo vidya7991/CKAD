@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: deploy
+spec:
+  jobTemplate:
+    metadata:
+      name: deploy
+    spec:
+      template:
+        metadata: {}
+        spec:
+          containers:
+          - image: nginx
+            name: deploy
+            resources: {}
+          restartPolicy: OnFailure
+  schedule: 0 * * * *
+status: {}

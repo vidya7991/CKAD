@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: scheduled-task
+spec:
+  suspend: true
+  jobTemplate:
+    metadata:
+      name: scheduled-task
+    spec:
+      template:
+        metadata: {}
+        spec:
+          containers:
+          - image: busybox
+            name: scheduled-task
+            command: ["sh", "-c", "echo 'EXEC_COMMAND'"]
+            env:
+            - name: EXEC_COMMAND
+              valueFrom:
+                configMapKeyRef:
+                  name: job-params
+                  key: EXEC_COMMAND
+            resources: {}
+          restartPolicy: OnFailure
+  schedule: 0 * * * *
+status: {}

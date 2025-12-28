@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: log-agent-2
+  namespace: monitoring
+  labels:
+    k8s-app: fluentd-logging
+spec:
+  selector:
+    matchLabels:
+      name: log-agent-2
+  template:
+    metadata:
+      labels:
+        name: log-agent-2
+    spec:
+      # tolerations:
+      # # these tolerations are to have the daemonset runnable on control plane nodes
+      # # remove them if your control plane nodes should not run pods
+      # - key: node-role.kubernetes.io/control-plane
+      #   operator: Exists
+      #   effect: NoSchedule
+      # - key: node-role.kubernetes.io/master
+      #   operator: Exists
+      #   effect: NoSchedule
+      containers:
+      - name: log-agent-2
+        image: busybox
+        command: ["/bin/sh", "-c", "tail -f /var/log/containers/*.log"]
+        # command: ["/bin/sh"]
+        # args: ["-c", "while true; do echo hello; sleep 10;done"]
+        volumeMounts:
+        - name: log-data
+          mountPath: /var/log/containers
+      initContainers:
+      - name: setup-dir
+        image: busybox
+        command: ["/bin/sh", "-c", "mkdir -p /var/log/containers && touch /var/log/containers/init.log"]
+        volumeMounts:
+        - name: log-data
+          mountPath: /var/log/containers
+      volumes:
+      - name: log-data
+        emptyDir: {}

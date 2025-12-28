@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: po
+  name: po
+spec:
+  containers:
+  - args:
+    - broken-app
+    image: busybox
+    name: po
+    command: ["/bin/sh", "-c", "sleep 3600", "this-extra-arg"]
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
