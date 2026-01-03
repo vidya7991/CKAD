@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: nightly-cleanup
+spec:
+  schedule: "0 2 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: nightly-cleanup
+            image: mysql:5.7
+            imagePullPolicy: IfNotPresent
+            command: ["/bin/sh", "-c", "mysql -u root -p$DB_PASSWORD $DB_NAME -e \"DELETE FROM logs;\""]
+            env:
+              - name: DB_NAME
+                valueFrom:
+                  configMapKeyRef:
+                    name: db-config
+                    key: db_name
+              - name: DB_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: db-pass
+                    key: password
+          restartPolicy: OnFailure

@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: logger-agent
+  namespace: kube-system
+  labels:
+    disktype: ssd
+spec:
+  selector:
+    matchLabels:
+      name: logger-agent
+  template:
+    metadata:
+      labels:
+        name: logger-agent
+    spec:
+      tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+        effect: NoSchedule
+      containers:
+      - name: logger-agent
+        image: fluentd:latest
+        resources:
+          limits:
+            memory: 200Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
