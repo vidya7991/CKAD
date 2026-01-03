@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
- name: nginx-deployment
+ name: app-v1
  labels:
    app: nginx
 spec:
@@ -23,3 +23,4 @@ spec:
    type: RollingUpdate
    rollingUpdate:
      maxUnavailable: 1
+     maxSurge: 2
